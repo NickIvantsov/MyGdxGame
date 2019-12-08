@@ -45,10 +45,10 @@ class GameScreen extends ScreenAdapter {
     private SpriteBatch batch;
     private static int SNAKE_MOVEMENT = 32;
     private int snakeX = 0, snakeY = 0;
-    private int leftBtnX = 300, leftBtnY = 75;
-    private int rightBtnX = 600, rightBtnY = 75;
-    private int downBtnX = 450, downBtnY = 0;
-    private int upBtnX = 445, upBtnY = 160;
+    private final int leftBtnX = 10, leftBtnY = 75;
+    private final int rightBtnX = 310, rightBtnY = 75;
+    private final int downBtnX = 160, downBtnY = 0;
+    private final int upBtnX = 155, upBtnY = 160;
 
     private static int GRID_CELL = 32;
     private int screenWidth;
@@ -60,8 +60,8 @@ class GameScreen extends ScreenAdapter {
 
     // private static final float WORLD_WIDTH = 1280;
     //  private static final float WORLD_HEIGHT = 960;
-    private static float WORLD_WIDTH = 1920;
-    private static float WORLD_HEIGHT = 1080;
+    private static final float WORLD_WIDTH = 1280;
+    private static final float WORLD_HEIGHT = 960;
 
     private Viewport viewport;
     private Camera camera;
@@ -155,8 +155,10 @@ class GameScreen extends ScreenAdapter {
         snakehiss0_ssio3rdw = Gdx.audio.newSound(Gdx.files.internal("data/snakehiss0_ssio3rdw.mp3"));
         snakehiss_1235 = Gdx.audio.newSound(Gdx.files.internal("data/snakehiss_1235.mp3"));
 
-        WORLD_WIDTH = Gdx.graphics.getWidth();
-        WORLD_HEIGHT = Gdx.graphics.getHeight();
+        //WORLD_WIDTH = Gdx.graphics.getWidth();
+       // WORLD_HEIGHT = Gdx.graphics.getHeight();
+
+
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.set(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, 0);
@@ -215,7 +217,7 @@ class GameScreen extends ScreenAdapter {
             leftButton = getImageButton(leftDrawable, leftBtnX, leftBtnY, LEFT, "left.png", "left_pressed.png");
             stage.addActor(leftButton);
 
-            pauseButton = getImageButton(pauseDrawable, (int) WORLD_WIDTH - 150, (int) WORLD_HEIGHT - 120, "pause.png", "pause_pressed.png");
+            pauseButton = getImageButton(pauseDrawable, (int) Gdx.graphics.getWidth() - 150, (int) Gdx.graphics.getHeight() - 120, "pause.png", "pause_pressed.png");
             stage.addActor(pauseButton);
 
         }
@@ -349,6 +351,14 @@ class GameScreen extends ScreenAdapter {
         shapeRenderer.end();
     }
 
+    private void drawGridRect() {
+        shapeRenderer.setProjectionMatrix(camera.projection);
+        shapeRenderer.setTransformMatrix(camera.view);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.rect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+        shapeRenderer.end();
+    }
+
 /*    private void drawFilled() {
         shapeRenderer2.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer2.rect(500, 300, GRID_CELL, GRID_CELL);
@@ -377,10 +387,12 @@ class GameScreen extends ScreenAdapter {
                 updateSnake(delta);
                 checkAppleCollision();
                 checkAndPlaceApple();
-                upButton.setVisible(true);
-                downButton.setVisible(true);
-                leftButton.setVisible(true);
-                rightButton.setVisible(true);
+                if (Gdx.app.getType() == Application.ApplicationType.Android) {
+                    upButton.setVisible(true);
+                    downButton.setVisible(true);
+                    leftButton.setVisible(true);
+                    rightButton.setVisible(true);
+                }
                 if (isTouch) {
 
                     if (MOVE_TIME < 0.1f) {
@@ -395,20 +407,25 @@ class GameScreen extends ScreenAdapter {
                 snakehiss_1235.stop(idSnakehiss_1235);
                 snakehiss0_ssio3rdw.stop(idSnakehiss0_ssio3rdw);
                 checkForRestart();
-                upButton.setVisible(false);
-                downButton.setVisible(false);
-                leftButton.setVisible(false);
-                rightButton.setVisible(false);
+                if (Gdx.app.getType() == Application.ApplicationType.Android) {
+                    upButton.setVisible(false);
+                    downButton.setVisible(false);
+                    leftButton.setVisible(false);
+                    rightButton.setVisible(false);
+                }
+
                 isFirstStart = true;
 
             }
             break;
             case PAUSED:
                 // checkForRestart();
-                upButton.setVisible(false);
-                downButton.setVisible(false);
-                leftButton.setVisible(false);
-                rightButton.setVisible(false);
+                if (Gdx.app.getType() == Application.ApplicationType.Android) {
+                    upButton.setVisible(false);
+                    downButton.setVisible(false);
+                    leftButton.setVisible(false);
+                    rightButton.setVisible(false);
+                }
                 break;
         }
         //Наконец, давайте обновим его в каждом кадре.
@@ -418,6 +435,7 @@ class GameScreen extends ScreenAdapter {
         //checkAndPlaceApple();
         //checkAppleCollision();
         clearScreen();
+        drawGridRect();
         //drawGrid();
         // drawFilled();
         //drawFilledCircly();
@@ -459,10 +477,13 @@ class GameScreen extends ScreenAdapter {
         snakeYBeforeUpdate = 0;
         appleAvailable = false;
         score = 0;
-        upButton.setVisible(true);
-        downButton.setVisible(true);
-        leftButton.setVisible(true);
-        rightButton.setVisible(true);
+        if (Gdx.app.getType() == Application.ApplicationType.Android) {
+            upButton.setVisible(true);
+            downButton.setVisible(true);
+            leftButton.setVisible(true);
+            rightButton.setVisible(true);
+        }
+
     }
 
     /**
